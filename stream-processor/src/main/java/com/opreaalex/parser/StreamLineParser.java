@@ -1,6 +1,8 @@
 package com.opreaalex.parser;
 
+import com.opreaalex.parser.exception.StreamLineParserException;
+
 public interface StreamLineParser {
 
-    <T> T parseLine(String line);
+    Object parseLine(String line) throws StreamLineParserException;
 }
