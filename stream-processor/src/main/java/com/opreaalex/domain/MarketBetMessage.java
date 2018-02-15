@@ -6,9 +6,6 @@ public class MarketBetMessage extends BetMessage {
 
     private String eventId;
     private String marketId;
-    private String name;
-    private boolean displayed;
-    private boolean suspended;
 
     public String getEventId() {
         return eventId;
@@ -26,32 +23,8 @@ public class MarketBetMessage extends BetMessage {
         this.marketId = marketId;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public boolean isDisplayed() {
-        return displayed;
-    }
-
-    public void setDisplayed(boolean displayed) {
-        this.displayed = displayed;
-    }
-
-    public boolean isSuspended() {
-        return suspended;
-    }
-
-    public void setSuspended(boolean suspended) {
-        this.suspended = suspended;
-    }
-
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -63,15 +36,12 @@ public class MarketBetMessage extends BetMessage {
         }
         final MarketBetMessage message = (MarketBetMessage) o;
 
-        return displayed == message.displayed &&
-                suspended == message.suspended &&
-                Objects.equals(eventId, message.eventId) &&
-                Objects.equals(marketId, message.marketId) &&
-                Objects.equals(name, message.name);
+        return Objects.equals(eventId, message.eventId) &&
+                Objects.equals(marketId, message.marketId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), eventId, marketId, name, displayed, suspended);
+        return Objects.hash(super.hashCode(), eventId, marketId);
     }
 }

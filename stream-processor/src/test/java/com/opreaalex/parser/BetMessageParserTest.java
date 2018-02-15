@@ -1,9 +1,6 @@
 package com.opreaalex.parser;
 
-import com.opreaalex.domain.BetMessageHeader;
-import com.opreaalex.domain.BetMessageOperation;
-import com.opreaalex.domain.EventBetMessage;
-import com.opreaalex.domain.MarketBetMessage;
+import com.opreaalex.domain.*;
 import com.opreaalex.parser.exception.StreamLineParserException;
 import org.junit.Assert;
 import org.junit.Before;
@@ -20,33 +17,6 @@ public class BetMessageParserTest {
     public void setUp() {
         parser = new BetMessageParser();
     }
-
-    // Begin BetMessage
-    @Test(expected = StreamLineParserException.class)
-    public void testParseBetMessageBadFormat() throws StreamLineParserException {
-        parser.parseLine("this-is-a-|-bad-format");
-    }
-
-    @Test(expected = StreamLineParserException.class)
-    public void testParseBetMessageBadId() throws StreamLineParserException {
-        parser.parseLine("|abc|create|event|1497359166352|some-irrelevant-text-for-this-test");
-    }
-
-    @Test(expected = StreamLineParserException.class)
-    public void testParseBetMessageBadOperation() throws StreamLineParserException {
-        parser.parseLine("|2054|abc|event|1497359166352|some-irrelevant-text-for-this-test");
-    }
-
-    @Test(expected = StreamLineParserException.class)
-    public void testParseBetMessageBadType() throws StreamLineParserException {
-        parser.parseLine("|2054|create|abc|1497359166352|some-irrelevant-text-for-this-test");
-    }
-
-    @Test(expected = StreamLineParserException.class)
-    public void testParseBetMessageBadInstant() throws StreamLineParserException {
-        parser.parseLine("|2054|create|event|abc|some-irrelevant-text-for-this-test");
-    }
-    // End BetMessage
 
     // Begin EventBetMessage
     @Test
@@ -128,4 +98,42 @@ public class BetMessageParserTest {
         parser.parseLine("|2054|update|market|1497359166352|ee4d2439-e1c5-4cb7-98ad-9879b2fd84c2|ee4d2439-e1c5-4cb7-98ad-9879b2fd84c2|\\|Accrington\\| vs \\|Cambridge\\||0|abc|");
     }
     // End MarketBetMessage
+
+    // Begin OutcomeBetMessage
+    @Test
+    public void testParseOutcomeBetMessageSuccess() throws StreamLineParserException {
+        final String line = "|2054|create|outcome|1497359166352|ee4d2439-e1c5-4cb7-98ad-9879b2fd84c2|ee4d2439-e1c5-4cb7-98ad-9879b2fd84c2|\\|Accrington\\| vs \\|Cambridge\\||$12.00|0|1|";
+
+        final BetMessageHeader expectedHeader = new BetMessageHeader();
+        expectedHeader.setId(new BigInteger("2054"));
+        expectedHeader.setOperation(BetMessageOperation.CREATE);
+        expectedHeader.setInstant(Instant.ofEpochMilli(1497359166352L));
+
+        final OutcomeBetMessage expected = new OutcomeBetMessage();
+        expected.setHeader(expectedHeader);
+        expected.setMarketId("ee4d2439-e1c5-4cb7-98ad-9879b2fd84c2");
+        expected.setOutcomeId("ee4d2439-e1c5-4cb7-98ad-9879b2fd84c2");
+        expected.setName("\\|Accrington\\| vs \\|Cambridge\\|");
+        expected.setPrice("$12.00");
+        expected.setDisplayed(false);
+        expected.setSuspended(true);
+
+        Assert.assertEquals(expected, parser.parseLine(line));
+    }
+
+    @Test(expected = StreamLineParserException.class)
+    public void testParseOutcomeBetMessageBadLength() throws StreamLineParserException {
+        parser.parseLine("|2054|create|outcome|1497359166352|ee4d2439-e1c5-4cb7-98ad-9879b2fd84c2|ee4d2439-e1c5-4cb7-98ad-9879b2fd84c2|\\|Accrington\\| vs \\|Cambridge\\||");
+    }
+
+    @Test(expected = StreamLineParserException.class)
+    public void testParseOutcomeBetMessageBadDisplayed() throws StreamLineParserException {
+        parser.parseLine("|2054|create|outcome|1497359166352|ee4d2439-e1c5-4cb7-98ad-9879b2fd84c2|ee4d2439-e1c5-4cb7-98ad-9879b2fd84c2|\\|Accrington\\| vs \\|Cambridge\\||$12.00|abc|1|");
+    }
+
+    @Test(expected = StreamLineParserException.class)
+    public void testParseOutcomeBetMessageBadSuspended() throws StreamLineParserException {
+        parser.parseLine("|2054|create|outcome|1497359166352|ee4d2439-e1c5-4cb7-98ad-9879b2fd84c2|ee4d2439-e1c5-4cb7-98ad-9879b2fd84c2|\\|Accrington\\| vs \\|Cambridge\\||$12.00|0|abc|");
+    }
+    // End OutcomeBetMessage
 }

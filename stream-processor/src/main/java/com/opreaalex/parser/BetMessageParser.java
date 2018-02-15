@@ -13,6 +13,7 @@ public class BetMessageParser implements StreamLineParser {
     private static final int TOKENS_LEN_MIN = 4;
     private static final int TOKENS_LEN_EVENT = 11;
     private static final int TOKENS_LEN_MARKET = 9;
+    private static final int TOKENS_LEN_OUTCOME = 10;
 
     // Header indexes
     private static final int IDX_ID = 0;
@@ -28,10 +29,18 @@ public class BetMessageParser implements StreamLineParser {
     private static final int IDX_EVENT_DISPLAYED = 9;
     private static final int IDX_EVENT_SUSPENDED = 10;
     // Market indexes
+    private static final int IDX_MARKET_EVENT_ID = 4;
     private static final int IDX_MARKET_ID = 5;
     private static final int IDX_MARKET_NAME = 6;
     private static final int IDX_MARKET_DISPLAYED = 7;
     private static final int IDX_MARKET_SUSPENDED = 8;
+    // Outcome indexes
+    private static final int IDX_OUTCOME_MARKET_ID = 4;
+    private static final int IDX_OUTCOME_ID = 5;
+    private static final int IDX_OUTCOME_NAME = 6;
+    private static final int IDX_OUTCOME_PRICE = 7;
+    private static final int IDX_OUTCOME_DISPLAYED = 8;
+    private static final int IDX_OUTCOME_SUSPENDED = 9;
 
     // Event types
     private static final String TYPE_EVENT = "event";
@@ -53,10 +62,8 @@ public class BetMessageParser implements StreamLineParser {
         final String[] tokens = readTokens(line);
 
         final BetMessageHeader header = new BetMessageHeader();
-        header.setId(readBigInteger(
-                tokens[IDX_ID], REGEX_ID, "Invalid id"));
-        header.setOperation(readOperation(
-                tokens[IDX_OPERATION], REGEX_OPERATION));
+        header.setId(readId(tokens[IDX_ID]));
+        header.setOperation(readOperation(tokens[IDX_OPERATION]));
         header.setInstant(readInstant(
                 tokens[IDX_INSTANT], REGEX_INSTANT, "Invalid instant"));
 
@@ -113,7 +120,7 @@ public class BetMessageParser implements StreamLineParser {
 
         final MarketBetMessage message = new MarketBetMessage();
         message.setEventId(readString(
-                tokens[IDX_EVENT_ID], null, null));
+                tokens[IDX_MARKET_EVENT_ID], null, null));
         message.setMarketId(readString(
                 tokens[IDX_MARKET_ID], null, null));
         message.setName(readString(
@@ -126,9 +133,26 @@ public class BetMessageParser implements StreamLineParser {
         return message;
     }
 
-    private OutcomeBetMessage parseOutcomeBetMessage(final String[] tokens) {
+    private OutcomeBetMessage parseOutcomeBetMessage(final String[] tokens)
+            throws StreamLineParserException {
+        if (tokens.length != TOKENS_LEN_OUTCOME) {
+            throw new StreamLineParserException("Invalid length for <outcome>");
+        }
+
         final OutcomeBetMessage message = new OutcomeBetMessage();
-        // TODO Implement
+        message.setMarketId(readString(
+                tokens[IDX_OUTCOME_MARKET_ID], null, null));
+        message.setOutcomeId(readString(
+                tokens[IDX_OUTCOME_ID], null, null));
+        message.setName(readString(
+                tokens[IDX_OUTCOME_NAME], null, null));
+        message.setPrice(readString(
+                tokens[IDX_OUTCOME_PRICE], null, null));
+        message.setDisplayed(readBoolean(
+                tokens[IDX_OUTCOME_DISPLAYED], "Invalid displayed"));
+        message.setSuspended(readBoolean(
+                tokens[IDX_OUTCOME_SUSPENDED], "Invalid suspended"));
+
         return message;
     }
 
@@ -144,21 +168,18 @@ public class BetMessageParser implements StreamLineParser {
         return tokens;
     }
 
-    private BigInteger readBigInteger(final String tokenVal,
-                                      final String regex,
-                                      final String errMsg)
+    private BigInteger readId(final String tokenVal)
             throws StreamLineParserException {
-        if (regex != null && !tokenVal.matches(REGEX_ID)) {
-            throw new StreamLineParserException(errMsg);
+        if (!tokenVal.matches(REGEX_ID)) {
+            throw new StreamLineParserException("Invalid id");
         }
 
         return new BigInteger(tokenVal);
     }
 
-    private BetMessageOperation readOperation(final String tokenVal,
-                                              final String regex)
+    private BetMessageOperation readOperation(final String tokenVal)
             throws StreamLineParserException {
-        if (regex != null && !tokenVal.matches(REGEX_OPERATION)) {
+        if (!tokenVal.matches(REGEX_OPERATION)) {
             throw new StreamLineParserException("Invalid operation");
         }
 
@@ -180,7 +201,7 @@ public class BetMessageParser implements StreamLineParser {
                                 final String regex,
                                 final String errMsg)
             throws StreamLineParserException {
-        if (regex != null && !tokenVal.matches(REGEX_INSTANT)) {
+        if (regex != null && !tokenVal.matches(regex)) {
             throw new StreamLineParserException(errMsg);
         }
 
