@@ -3,7 +3,7 @@ package com.opreaalex.domain;
 import java.time.Instant;
 import java.util.Objects;
 
-public class EventBetMessage extends BaseBetMessage {
+public class EventBetMessage extends BetMessage {
 
     private String eventId;
     private String category;
@@ -77,7 +77,9 @@ public class EventBetMessage extends BaseBetMessage {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        if (!super.equals(o)) return false;
+        if (!super.equals(o)) {
+            return false;
+        }
         final EventBetMessage message = (EventBetMessage) o;
         return displayed == message.displayed &&
                 suspended == message.suspended &&

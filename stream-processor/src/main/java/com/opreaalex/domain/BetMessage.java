@@ -2,7 +2,7 @@ package com.opreaalex.domain;
 
 import java.util.Objects;
 
-public class BaseBetMessage {
+public class BetMessage {
 
     private BetMessageHeader header;
 
@@ -22,7 +22,7 @@ public class BaseBetMessage {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final BaseBetMessage message = (BaseBetMessage) o;
+        final BetMessage message = (BetMessage) o;
 
         return Objects.equals(header, message.header);
     }
