@@ -5,25 +5,33 @@ import com.opreaalex.parser.exception.StreamLineParserException;
 
 import java.math.BigInteger;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 public class BetMessageParser implements StreamLineParser {
 
-    private static final int MIN_NUM_TOKENS = 6;
+    private static final int TOKENS_LEN_MIN = 4;
+    private static final int TOKENS_LEN_EVENT = 11;
+    private static final int TOKENS_LEN_MARKET = 9;
 
     // Header indexes
-    private static final int IDX_ID = 1;
-    private static final int IDX_OPERATION = 2;
-    private static final int IDX_TYPE = 3;
-    private static final int IDX_INSTANT = 4;
+    private static final int IDX_ID = 0;
+    private static final int IDX_OPERATION = 1;
+    private static final int IDX_TYPE = 2;
+    private static final int IDX_INSTANT = 3;
     // Event indexes
-    private static final int IDX_EVENT_ID = 5;
-    private static final int IDX_CATEGORY = 6;
-    private static final int IDX_SUB_CATEGORY = 7;
-    private static final int IDX_NAME = 8;
-    private static final int IDX_START_INSTANT = 9;
-    private static final int IDX_DISPLAYED = 10;
-    private static final int IDX_SUSPENDED = 11;
+    private static final int IDX_EVENT_ID = 4;
+    private static final int IDX_CATEGORY = 5;
+    private static final int IDX_SUB_CATEGORY = 6;
+    private static final int IDX_EVENT_NAME = 7;
+    private static final int IDX_START_INSTANT = 8;
+    private static final int IDX_EVENT_DISPLAYED = 9;
+    private static final int IDX_EVENT_SUSPENDED = 10;
+    // Market indexes
+    private static final int IDX_MARKET_ID = 5;
+    private static final int IDX_MARKET_NAME = 6;
+    private static final int IDX_MARKET_DISPLAYED = 7;
+    private static final int IDX_MARKET_SUSPENDED = 8;
 
     // Event types
     private static final String TYPE_EVENT = "event";
@@ -55,6 +63,7 @@ public class BetMessageParser implements StreamLineParser {
         final BetMessage message;
         final String type = readString(
                 tokens[IDX_TYPE], REGEX_TYPE, "Invalid type");
+
         if (TYPE_EVENT.equals(type)) {
             message = parseEventBetMessage(tokens);
             message.setHeader(header);
@@ -73,6 +82,10 @@ public class BetMessageParser implements StreamLineParser {
 
     private EventBetMessage parseEventBetMessage(final String[] tokens)
             throws StreamLineParserException {
+        if (tokens.length != TOKENS_LEN_EVENT) {
+            throw new StreamLineParserException("Invalid length for <event>");
+        }
+
         final EventBetMessage message = new EventBetMessage();
         message.setEventId(readString(
                 tokens[IDX_EVENT_ID], null, null));
@@ -81,20 +94,35 @@ public class BetMessageParser implements StreamLineParser {
         message.setSubCategory(readString(
                 tokens[IDX_SUB_CATEGORY], null, null));
         message.setName(readString(
-                tokens[IDX_NAME], null, null));
+                tokens[IDX_EVENT_NAME], null, null));
         message.setStartInstant(readInstant(
                 tokens[IDX_START_INSTANT], REGEX_INSTANT, "Invalid start instant"));
         message.setDisplayed(readBoolean(
-                tokens[IDX_DISPLAYED], "Invalid displayed"));
+                tokens[IDX_EVENT_DISPLAYED], "Invalid displayed"));
         message.setSuspended(readBoolean(
-                tokens[IDX_SUSPENDED], "Invalid suspended"));
+                tokens[IDX_EVENT_SUSPENDED], "Invalid suspended"));
 
         return message;
     }
 
-    private MarketBetMessage parseMarketBetMessage(final String[] tokens) {
+    private MarketBetMessage parseMarketBetMessage(final String[] tokens)
+            throws StreamLineParserException {
+        if (tokens.length != TOKENS_LEN_MARKET) {
+            throw new StreamLineParserException("Invalid length for <market>");
+        }
+
         final MarketBetMessage message = new MarketBetMessage();
-        // TODO Implement
+        message.setEventId(readString(
+                tokens[IDX_EVENT_ID], null, null));
+        message.setMarketId(readString(
+                tokens[IDX_MARKET_ID], null, null));
+        message.setName(readString(
+                tokens[IDX_MARKET_NAME], null, null));
+        message.setDisplayed(readBoolean(
+                tokens[IDX_MARKET_DISPLAYED], "Invalid displayed"));
+        message.setSuspended(readBoolean(
+                tokens[IDX_MARKET_SUSPENDED], "Invalid suspended"));
+
         return message;
     }
 
@@ -106,8 +134,10 @@ public class BetMessageParser implements StreamLineParser {
 
     private String[] readTokens(final String line)
             throws StreamLineParserException {
-        final String[] tokens = line.split(REGEX_LINE);
-        if (tokens.length < MIN_NUM_TOKENS) {
+        final String[] rawTokens = line.split(REGEX_LINE);
+        final String[] tokens = Arrays.copyOfRange(
+                rawTokens, 1, rawTokens.length);
+        if (tokens.length < TOKENS_LEN_MIN) {
             throw new StreamLineParserException("Invalid message format");
         }
 

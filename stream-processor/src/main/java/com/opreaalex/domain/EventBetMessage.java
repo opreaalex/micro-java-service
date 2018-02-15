@@ -70,7 +70,7 @@ public class EventBetMessage extends BetMessage {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -81,6 +81,7 @@ public class EventBetMessage extends BetMessage {
             return false;
         }
         final EventBetMessage message = (EventBetMessage) o;
+
         return displayed == message.displayed &&
                 suspended == message.suspended &&
                 Objects.equals(eventId, message.eventId) &&
