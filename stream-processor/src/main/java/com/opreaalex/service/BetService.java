@@ -6,5 +6,6 @@ public class BetService implements StreamReaderHandler {
 
     public void onNewLine(final String line) {
         // TODO Implement
+
     }
 }
