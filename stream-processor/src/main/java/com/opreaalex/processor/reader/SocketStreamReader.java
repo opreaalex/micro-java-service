@@ -1,4 +1,4 @@
-package com.opreaalex.reader;
+package com.opreaalex.processor.reader;
 
 public class SocketStreamReader {
 

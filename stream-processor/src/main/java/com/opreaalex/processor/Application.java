@@ -1,8 +1,8 @@
-package com.opreaalex;
+package com.opreaalex.processor;
 
-import com.opreaalex.parser.BetMessageParser;
-import com.opreaalex.service.BetService;
-import com.opreaalex.store.RabbitMqBetStore;
+import com.opreaalex.processor.parser.BetMessageParser;
+import com.opreaalex.processor.service.BetService;
+import com.opreaalex.processor.store.RabbitMqBetStore;
 
 import java.io.BufferedReader;
 import java.io.IOException;

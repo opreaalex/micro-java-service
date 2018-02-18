@@ -1,4 +1,4 @@
-package com.opreaalex.store;
+package com.opreaalex.processor.store;
 
 public interface BetStore {
 

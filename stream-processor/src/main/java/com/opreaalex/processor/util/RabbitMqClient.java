@@ -1,4 +1,4 @@
-package com.opreaalex.util;
+package com.opreaalex.processor.util;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;

@@ -1,4 +1,4 @@
-package com.opreaalex.parser.exception;
+package com.opreaalex.processor.parser.exception;
 
 public class StreamLineParserException extends Exception {
 

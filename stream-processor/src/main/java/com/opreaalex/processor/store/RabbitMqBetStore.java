@@ -1,6 +1,6 @@
-package com.opreaalex.store;
+package com.opreaalex.processor.store;
 
-import com.opreaalex.util.RabbitMqClient;
+import com.opreaalex.processor.util.RabbitMqClient;
 
 public class RabbitMqBetStore implements BetStore {
 

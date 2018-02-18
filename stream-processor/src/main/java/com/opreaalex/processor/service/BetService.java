@@ -1,14 +1,14 @@
-package com.opreaalex.service;
+package com.opreaalex.processor.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.opreaalex.domain.BetMessage;
-import com.opreaalex.parser.StreamLineParser;
-import com.opreaalex.parser.exception.StreamLineParserException;
-import com.opreaalex.reader.StreamReaderHandler;
-import com.opreaalex.service.serializer.BetMessageSerializer;
-import com.opreaalex.store.BetStore;
+import com.opreaalex.processor.domain.BetMessage;
+import com.opreaalex.processor.parser.StreamLineParser;
+import com.opreaalex.processor.parser.exception.StreamLineParserException;
+import com.opreaalex.processor.reader.StreamReaderHandler;
+import com.opreaalex.processor.service.serializer.BetMessageSerializer;
+import com.opreaalex.processor.store.BetStore;
 
 public class BetService implements StreamReaderHandler {
 

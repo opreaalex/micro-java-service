@@ -1,9 +1,9 @@
-package com.opreaalex.parser;
+package com.opreaalex.processor.parser;
 
-import com.opreaalex.domain.BetMessage;
-import com.opreaalex.domain.BetMessageOperation;
-import com.opreaalex.domain.BetMessageType;
-import com.opreaalex.parser.exception.StreamLineParserException;
+import com.opreaalex.processor.domain.BetMessage;
+import com.opreaalex.processor.domain.BetMessageOperation;
+import com.opreaalex.processor.domain.BetMessageType;
+import com.opreaalex.processor.parser.exception.StreamLineParserException;
 import org.junit.Assert;
 import org.junit.Test;
 
