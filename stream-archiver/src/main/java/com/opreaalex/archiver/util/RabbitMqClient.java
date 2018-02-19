@@ -32,7 +32,7 @@ public class RabbitMqClient {
         try {
             final Connection connection = connectionFactory.newConnection();
             final Channel channel = connection.createChannel();
-            channel.basicConsume(MQ_QUEUE, new BetConsumer(channel, handler));
+            channel.basicConsume(MQ_QUEUE, false, new BetConsumer(channel, handler));
         } catch (final IOException | TimeoutException e) {
             e.printStackTrace();
         }

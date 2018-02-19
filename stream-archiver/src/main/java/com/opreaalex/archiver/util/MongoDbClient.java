@@ -1,9 +1,8 @@
 package com.opreaalex.archiver.util;
 
-import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
-import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
 
 import java.util.Map;
 
@@ -19,18 +18,15 @@ public class MongoDbClient {
 
     private final MongoDatabase database;
 
-    private final MongoCollection collection;
-
     public MongoDbClient() {
         client = new MongoClient(HOST, PORT);
         database = client.getDatabase(DB_NAME);
-        collection = database.getCollection(COLLECITON_NAME);
     }
 
-    public <T> void create(final T entry, final CollectionMapper<T> mapper) {
-        final BasicDBObject document = new BasicDBObject();
+    public <T> void create(final T entry, CollectionMapper<T> mapper) {
+        final Document document = new Document();
         document.putAll(mapper.mapEntry(entry));
-        collection.insertOne(document);
+        database.getCollection(COLLECITON_NAME).insertOne(document);
     }
 
     public interface CollectionMapper <T> {

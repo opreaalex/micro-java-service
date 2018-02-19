@@ -1,5 +1,8 @@
 package com.opreaalex.common.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.opreaalex.common.domain.jackson.InstantDeserializer;
+
 import java.math.BigInteger;
 import java.time.Instant;
 import java.util.Objects;
@@ -10,6 +13,8 @@ public class BetMessage {
     private BigInteger id;
     private BetMessageOperation operation;
     private BetMessageType type;
+
+    @JsonDeserialize(using = InstantDeserializer.class)
     private Instant timestamp;
 
     // Body
@@ -18,6 +23,8 @@ public class BetMessage {
     private String outcomeId;
     private String category;
     private String subCategory;
+
+    @JsonDeserialize(using = InstantDeserializer.class)
     private Instant startTime;
     private String price;
 
