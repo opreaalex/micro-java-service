@@ -25,6 +25,7 @@ public class MongoDbJsonStore implements JsonStore, RabbitMqClient.RabbitMqClien
     @Override
     public void store(final String jsonStr) {
         try {
+	    System.out.println(String.format("Storring msg: %s", jsonStr));
             final BetMessage message = objectMapper.readValue(
                     jsonStr, BetMessage.class);
             client.create(message, messageMapper);

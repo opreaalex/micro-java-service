@@ -9,6 +9,7 @@ public class RabbitMqBetStore implements BetStore {
     @Override
     public void storeJson(final String jsonStr) {
         // Simply publish the message to the default exchange
+	System.out.println(String.format("Processing msg: %s", jsonStr));
         client.publish(jsonStr.getBytes());
     }
 }
