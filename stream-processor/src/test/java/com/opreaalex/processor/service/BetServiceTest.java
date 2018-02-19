@@ -2,9 +2,9 @@ package com.opreaalex.processor.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.opreaalex.processor.domain.BetMessage;
-import com.opreaalex.processor.domain.BetMessageOperation;
-import com.opreaalex.processor.domain.BetMessageType;
+import com.opreaalex.common.domain.BetMessage;
+import com.opreaalex.common.domain.BetMessageOperation;
+import com.opreaalex.common.domain.BetMessageType;
 import com.opreaalex.processor.parser.StreamLineParser;
 import com.opreaalex.processor.parser.exception.StreamLineParserException;
 import com.opreaalex.processor.store.BetStore;

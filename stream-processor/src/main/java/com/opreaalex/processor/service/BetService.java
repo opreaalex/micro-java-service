@@ -3,7 +3,7 @@ package com.opreaalex.processor.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.opreaalex.processor.domain.BetMessage;
+import com.opreaalex.common.domain.BetMessage;
 import com.opreaalex.processor.parser.StreamLineParser;
 import com.opreaalex.processor.parser.exception.StreamLineParserException;
 import com.opreaalex.processor.reader.StreamReaderHandler;

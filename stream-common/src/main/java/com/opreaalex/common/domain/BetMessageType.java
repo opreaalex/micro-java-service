@@ -1,4 +1,4 @@
-package com.opreaalex.processor.domain;
+package com.opreaalex.common.domain;
 
 public enum BetMessageType {
 

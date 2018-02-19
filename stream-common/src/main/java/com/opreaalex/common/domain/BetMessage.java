@@ -1,4 +1,4 @@
-package com.opreaalex.processor.domain;
+package com.opreaalex.common.domain;
 
 import java.math.BigInteger;
 import java.time.Instant;

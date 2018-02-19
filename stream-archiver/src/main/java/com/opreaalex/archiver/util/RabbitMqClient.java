@@ -14,23 +14,25 @@ public class RabbitMqClient {
 
     private static final String MQ_QUEUE = "bet-queue";
 
+    private final RabbitMqClientHandler handler;
+
     private final ConnectionFactory connectionFactory;
 
-    public RabbitMqClient() {
+    public RabbitMqClient(final RabbitMqClientHandler handler) {
+        this.handler = handler;
         connectionFactory = new ConnectionFactory();
         connectionFactory.setHost(MQ_HOST);
         connectionFactory.setUsername(MQ_USER);
         connectionFactory.setPassword(MQ_PASS);
         connectionFactory.setVirtualHost(MQ_VHOST);
         connectionFactory.setAutomaticRecoveryEnabled(true);
-
     }
 
     public void startConsuming() {
         try {
             final Connection connection = connectionFactory.newConnection();
             final Channel channel = connection.createChannel();
-            channel.basicConsume(MQ_QUEUE, new BetConsumer(channel));
+            channel.basicConsume(MQ_QUEUE, new BetConsumer(channel, handler));
         } catch (final IOException | TimeoutException e) {
             e.printStackTrace();
         }
@@ -38,9 +40,12 @@ public class RabbitMqClient {
 
     private class BetConsumer extends DefaultConsumer {
 
+        private final RabbitMqClientHandler handler;
 
-        public BetConsumer(final Channel channel) {
+        BetConsumer(final Channel channel,
+                    final RabbitMqClientHandler handler) {
             super(channel);
+            this.handler = handler;
         }
 
         @Override
@@ -49,8 +54,11 @@ public class RabbitMqClient {
                                    final AMQP.BasicProperties properties,
                                    final byte[] body)
                 throws IOException {
-            final String jsonStr = new String(body, "UTF-8");
-            System.out.println(jsonStr);
+            handler.handleMessage(new String(body, "UTF-8"));
         }
+    }
+
+    public interface RabbitMqClientHandler {
+        void handleMessage(String msg);
     }
 }
