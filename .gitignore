@@ -73,6 +73,6 @@ crashlytics-build.properties
 fabric.properties
 
 # Strictly related to this project
-stream-processor.iml
-
+.iml
 target
+
