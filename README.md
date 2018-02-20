@@ -24,7 +24,7 @@ In the project directory you will find 3 sub-directories:
   - stream-common
   - stream-processor
 
-We need to first build the <b>stream-common</b> as this will be used by both applications.
+We need to first build <i>stream-common</i> as this will be used by both applications.
 
 ```
 $ cd ~/projects/micro-java-service/stream-common
